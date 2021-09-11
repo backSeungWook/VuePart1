@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>컴포넌트</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app1">
+    <my-compocnet/>
+  </div>
+
+  <div id="app2">
+    <my-comp/>
+  </div>
+
+  <!-- 데이터 전달(props) -->
+  <p> -- 데이터 전달(props) -- </p>
+  <div id="app3">
+    <my-vm3 :msg="message"></my-vm3>
+    
+  </div>
+
+  <!-- 사용자 지정 이벤트($emit) -->
+  <p> -- 사용자 지정 이벤트($emit) -- </p>
+  <div id="app4">
+    <my-vm4 :my-msg="message" @my-event="updateMessage"> </my-vm4>
+  </div>
+
+  <!-- 컴포넌트 - Slot -->
+  <p> -- 컴포넌트 - Slot -- </p>
+  <div id="app5">
+    <my-vm5>
+      
+      <input slot="slot1" type="text">
+      <template slot-scope="{mySlotData}">
+        {{mySlotData}}
+        <div>Hello Slot11</div>
+      </template>
+
+    </my-vm5>
+  </div>
+
+
+
+  <script>
+    /*전역 컴포넌트
+    Vue.component('my-compocnet',{
+      template:'<div class="me">{{ message }}</div>',
+      data: function(){
+        return{
+          message:'Hello Vue!!'
+        }
+      }
+    })*/
+
+
+    //지역 컴포넌트
+    const myComp = {
+      template:'<div class="me">{{ message }}</div>',
+      data(){
+        return{
+          message:'Hello Vue!!'
+        }
+      }
+    }
+
+    const vm1 = new Vue({
+      el:'#app1',
+      //지역 컴포넌트 등록.
+      components:{
+        'my-compocnet':myComp
+      }
+    })
+
+    const vm2 = new Vue({
+      el:'#app2',
+      components:{
+        myComp
+      }
+    })
+
+    //데이터 전달(props)
+    Vue.component('my-vm3',{
+      template: '<div>{{ msg }} </div>',
+      props: {
+       msg:{
+         type:[String,Number], //특정 타입으로 만 들어와야 함.
+         default: 'Default!!', //값이 지정 안되어있으면
+         required: true,// true 이면 필수로 데이터가 들어가야 함 
+         validator:function(value){//유효성 검사 (함수로 할당 되어야 함 )
+          return value === 'Hello'//msg값이 Hello가 아니면 에러 
+         }
+       }
+      }
+    })
+
+    const vm3 = new Vue({
+      el:'#app3',
+      data(){
+        return{
+          message: 'Hello'
+        }
+      }
+    })
+
+
+    //사용자 지정 이벤트($emit)
+    Vue.component('my-vm4',{
+      template: '<div @click="updateMsg">{{ myMsg }} </div>',
+      props: {
+       myMsg:String       
+      },
+      methods:{
+        updateMsg(){
+          this.$emit('my-event','Good')//`my-event`이름의 이벤트가 전달 될 때 2번째 인수의 값도 같이 전달.
+        }
+      }
+    })
+
+    const vm4 = new Vue({
+      el:'#app4',
+      data(){
+        return{
+          message: 'Hello'
+        }
+      },
+      methods:{
+        updateMessage(value){
+          this.message = value
+        }
+      }
+    })
+
+    //컴포넌트 - Slot
+    Vue.component('my-vm5',{
+      template: '<div> <slot :my-slot-data="message"></slot> <slot name="slot1"></slot>  <slot name="slot2">대체 컨텐츠 </slot></div>',
+      data(){
+        return{
+          message: 'Hello Slot Ex'
+        }
+      }
+      
+    })
+
+    const vm5 = new Vue({
+      el:'#app5',
+  
+    })
+
+  </script>
+</body>
+</html>

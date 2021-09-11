@@ -25,7 +25,13 @@
       const test = ['A','B','C','D']
   //객체 데이터만들 때 속성이름과 변수 이름이 같으면 하나만 작성
   const toObject = (a,b, ...c) => ({a,b,c})
-  console.log(toObject(...test))
+  const to12 =  (a,b,...c) => ({
+    a:a,
+    b:b,
+    c:c
+  })
+  //to12 == toObject
+  console.log(to12(...test))
     const vm1 = new Vue({
       el: '#app1',
       data:{

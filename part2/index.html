@@ -17,6 +17,16 @@
     .active{
       color:red;
     }
+    .parent{
+        width: 200px;
+        height: 200px;
+        background: blue;
+      }
+      .child{
+        width: 100px;
+        height: 100px;
+        background: red;
+      }
   </style>
 
 
@@ -68,6 +78,38 @@
     <!-- Vue.set 예제 -->
     <button @click="addHomePage">홈페이지 추가</button>
 
+    <!-- 이벤트 핸들링 메소드 이벤트 핸들러 -->
+    <p>-- 이벤트 핸들링 메소드 이벤트 핸들러 --</p>
+    <ul>
+      <li v-for="( eventTds , index) in eventTodos" :key="index"
+       
+      @click="clickMethod1(eventTds.title , $event); clickMethod2();" :class="'item-' + (index+1)"> 
+        {{eventTds.title}}
+      </li>
+    </ul>
+
+    <!-- 이벤트 핸들링 이벤트 수식어 -->
+    <p>-- 이벤트 핸들링 이벤트 수식어 --</p>
+    <div class="parent" @click.self="clickHandler">
+      <div class="child" @click.self="clickHandler"></div>
+    </div>
+
+    <!-- 이벤트 핸들링 키 수식어 -->
+    <p>-- 이벤트 핸들링 키 수식어 --</p>
+    <input type="text" @keydown.esc="keydownHandler">
+    <input type="text" @keydown.ctrl.enter="keydownHandler"><!--체인링(합성) 가능-->
+
+    <!-- 폼 입력 바인딩 예제-->
+    <p>폼 입력 바인딩</p>
+      <input type="text" v-model="message"  >
+      <div>{{message}}</div>
+    <p>폼 한글 사용</p>
+      <input type="text" @input="bindMessage" :value="message1" >
+      <div>{{message1}}</div>
+    <p>폼 입력 바인딩 수식어</p>
+      <input type="text" v-model.lazy="message2">
+      <div>{{ message2 }}</div>
+    
   </div>
 
 
@@ -89,7 +131,14 @@
         heropy: {
           name:'HEROPY',
           age: 30
-        }
+        },eventTodos: [
+          {title:'Event 아침 묵기'},
+          {title:'Event 점심 묵기'},
+          {title:'Event 저녁 묵기'}
+        ],
+        message:'Hello Form',
+        message1:'Hello Form Korean',
+        message2:'Hello message2'
       },
       computed:{
         //Computed 예제 
@@ -164,13 +213,37 @@
         },
         //리스트 렌더링 배열 예제 
         pushTodo(){
-         // this.computedtodos.push({title:"야식먹귀"}) == Vue.set(this.computedtodos,3,{title:'야식먹기!!!!'})
+          this.computedtodos.push({title:"야식먹귀"})//== Vue.set(this.computedtodos,3,{title:'야식먹기!!!!'})
          // 1:추가될 리스트및 개체 데이터  2: 인덱스 번호 3: 추가 내용
          this.$set(this.computedtodos,3,{title:'야식먹기!!!!'}) 
         },
+        //리스트 렌더링 객체 예제 
         addHomePage() {
           this.$set(this.heropy,'homepage','naver.com')
+        },
+        //이벤트 핸들링 메소드 이벤트 핸들러
+        clickMethod1(title ,event) {
+          console.log('click1')
+          console.log(title)
+          console.log(event.currentTarget.className)
+        },
+        //이벤트 핸들링 메소드 이벤트 핸들러
+        clickMethod2() {
+          console.log('click2')          
+        },
+        //이벤트 핸들링 이벤트 수식어
+        clickHandler(event){
+          console.log(event.currentTarget.className)
+        },
+        //이벤트 핸들링 키 수식어
+        keydownHandler(e)
+        {
+            console.log('Done!')  
+        },
+        bindMessage(event){
+          this.message1 = event.target.value
         }
+
       }
     })    
   </script>
