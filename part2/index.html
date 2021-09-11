@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Part2 Vue 가이드 문서 따라가기</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link rel="stylesheet" href="./main.css">
+
+</head>
+<body>
+  <style>
+    .normal{
+      color: blue;
+    }
+    .active{
+      color:red;
+    }
+  </style>
+
+
+  <div id="app">
+    <!-- 라이프 사이클 예제 -->
+    <div ref="msg">{{msg}}</div>
+    <div ref="div"></div>
+
+    <!-- 템플릿 문법 예제 -->
+    <!-- v-once : 한번만 적용(변경이 안댐)-->
+    <div v-once>{{msg}}</div>
+    <div>{{msg}}</div>
+    <div v-html="msg"></div><!--v-html : 원시HTML 태그 삽입 가능 -->
+    <div>{{number+2 + new Date()}}</div><!--JavaScript 표현식만 사용 가능. 로직은 사용 불가능.-->
+    <div v-bind:class="className" v-on:click="changeClassName">{{msg2}}</div>
+
+    <!--Computed 예제-->
+    <div class="todos">
+      <div v-for="todo in computedTodos" :key="todo.id">
+        <input type="checkbox" v-model="todo.done">
+        <span>{{todo.title}}</span>
+      </div>
+    </div>
+
+    <!--Computed Get or Set 예제-->
+    <div>{{reversedMsg}}</div>
+
+    <!--Watch 예제-->
+    <!-- 특정한 데이터를 감시하고 있다가 변경 시 어떠한 로직을 작동 할것인지-->
+    <div>{{msg3}}</div>
+    <div>{{reversedMsg}}</div>
+
+    <!-- 리스트 렌더링 배열 -->
+    <!--index 사용법 (1 , 2) : 1: 사용자 정의 이름 , 2: index(제로베이스로 제공) -->
+    <ul class="todos">
+      <li v-for="(todo, index) in computedTodos" :key="index">{{todo.title}} </li>
+    </ul>
+    <button @click="pushTodo">리스트 추가</button>
+    
+    <!-- 리스트 렌더링 객체 -->
+    <!-- 객체 index사용 시 3번째 인수에 index 2번째는 객체-->
+    
+    <ul class="heropy">
+      <li v-for="(value,key , index) in heropy" :key="index">
+        {{ value }}
+      </li>
+    </ul>
+
+    <!-- Vue.set 예제 -->
+    <button @click="addHomePage">홈페이지 추가</button>
+
+  </div>
+
+
+  <script>
+    
+    const vm = new Vue({
+      el: '#app',
+      data:{
+        msg:'Hellow<br/> Vue.',
+        msg2:'Class 삽입',
+        msg3:'Computed Get or Set',
+        className:'normal',
+        number:2,
+        computedtodos: [
+          {title:'아침'},
+          {title:'점심'},
+          {title:'저녁'}
+        ],
+        heropy: {
+          name:'HEROPY',
+          age: 30
+        }
+      },
+      computed:{
+        //Computed 예제 
+        //오리지날 데이터 만으로는 무엇가를 할 수 없을 때 Computed를 사용 하여 데이터를 재가공 하여 사용.
+        computedTodos(){
+          //map : forEach과 같이 배열값만큼 반복(새로운 배열로 반환)
+          return this.computedtodos.map((computedtodos,index) =>{
+            //return Object.assign({},todo,{
+             // id:index+1,
+             // don:false
+            //})
+            
+            return {
+              ...computedtodos,//전개 연산자(스프레드 연산자)
+              id:index+1,
+              done:false
+            }
+          })
+        },
+        //Computed Getter or Setter 예제
+        //reversedMsg(){
+         // return this.msg3.split('').reverse().join('')        
+         //밑에 reversedMsg get()와 동일
+        //}
+        reversedMsg:{
+          //Getter
+          get(){
+            return this.msg3.split('').reverse().join('')  
+          },
+          //Setter
+          set(value){
+            this.msg3 = value
+          }
+        }
+      },
+      watch:{
+        msg3(newMsg){
+          console.log('New Data '+newMsg)
+        },
+        reversedMsg(newMsg){
+          console.log('New reversedMsg '+newMsg)
+        }
+      },
+      //라이프 사이클 예제
+      beforeCreate(){
+        console.log('BeforeCreate!!')
+      },
+      created(){
+        console.log('Create!!')
+      },
+      beforeMount(){
+        console.log('BeforeMount!!',this.$refs.div)
+      },
+      mounted(){
+        console.log('Mounted!!',this.$refs.div.innerText='Mounted')
+      },
+      beforeUpdate(){
+        console.log('BefoeUpdate!!',this.$refs.msg.innerText)
+      },
+      updated(){
+        console.log('Updated!!',this.$refs.msg.innerText)
+      },
+      beforeDestroy(){
+        console.log('BeforeDestroy!!')
+      },
+      destroyed(){
+        console.log('Destroyed!!')
+      },
+      methods:{
+        changeClassName(){
+          this.className= 'active'
+        },
+        //리스트 렌더링 배열 예제 
+        pushTodo(){
+         // this.computedtodos.push({title:"야식먹귀"}) == Vue.set(this.computedtodos,3,{title:'야식먹기!!!!'})
+         // 1:추가될 리스트및 개체 데이터  2: 인덱스 번호 3: 추가 내용
+         this.$set(this.computedtodos,3,{title:'야식먹기!!!!'}) 
+        },
+        addHomePage() {
+          this.$set(this.heropy,'homepage','naver.com')
+        }
+      }
+    })    
+  </script>
+</body>
+</html> 

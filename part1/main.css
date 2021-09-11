@@ -1,0 +1,19 @@
+.box{
+  width: 150px;
+  height: 150px;
+  background: rosybrown;
+  cursor: pointer;
+  transition: 1s;
+  color: beige;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.box.active{
+  width: 500px;
+  background: cornflowerblue;
+}
+
+li span.done{
+  text-decoration: line-through;
+}

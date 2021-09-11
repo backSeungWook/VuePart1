@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>조건부 렌더링(Rendering Test)</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  
+</head>
+<body>
+  <style>
+    .box{
+      width:200px;
+      height: 150px;
+      background-color: red;
+    }
+    .box--red{
+      background-color: red;
+    }
+    .box--blue{
+      background-color: blue;
+    }
+    .box--gray{
+      background-color: gray;
+    }
+
+  </style>
+  <div id="app">
+    <!-- v-if -->
+    <div v-if="colorState === 'red'" 
+      class="box box--red"></div>
+    <!-- v-else-if or v-else-->
+    <div v-else-if="colorState === 'blue'" 
+      class="box box--blue"></div>
+    <div v-else 
+      class="box box--gray"></div>
+    
+    <!-- show -->
+    <button @click="toggle">Toggle</button>
+    <div v-show="show" class="box"></div>
+    
+
+  </div>
+  
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data:{
+        colorState: 'blue',
+        show: true
+      },
+      methods:{
+        toggle(){
+          this.show = !this.show
+        }
+      }
+    })
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>computedCaching</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+  
+
+  <div id = app1>
+    <div>{{ reverseMsg() }}</div>
+    <div>{{ reverseMsg() }}</div>
+    <div>{{ reverseMsg() }}</div>
+    <div>-----------------</div>
+    <div>{{ reversedMsg }}</div>
+    <div>{{ reversedMsg }}</div>
+    <div>{{ reversedMsg }}</div>
+  </div>
+  
+  <script>
+      const test = ['A','B','C','D']
+  //객체 데이터만들 때 속성이름과 변수 이름이 같으면 하나만 작성
+  const toObject = (a,b, ...c) => ({a,b,c})
+  console.log(toObject(...test))
+    const vm1 = new Vue({
+      el: '#app1',
+      data:{
+        msg: 'Hellow Vue!'
+      },
+      computed:{
+        //기존 연산된 결과값만을 가져옴
+        reversedMsg(){
+          return this.msg.split('').reverse().join('')
+        }
+      },
+      methods:{
+        reverseMsg(){
+          return this.msg.split('').reverse().join('')
+        }
+      }
+    })
+  </script>
+</body>
+</html>
